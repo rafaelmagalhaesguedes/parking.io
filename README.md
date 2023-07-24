@@ -2,6 +2,10 @@
 
 Este é um projeto simples de um sistema de estacionamento desenvolvido em JavaScript utilizando a funcionalidade de LocalStorage para armazenar os veículos estacionados.
 
+# Live link
+
+https://rafaelmagalhaesguedes.github.io/estacionamento.io/
+
 # Funcionalidades
 
 1. Adicionar um veículo: Permite adicionar um veículo ao estacionamento informando sua placa. O sistema registra automaticamente a data e hora de entrada do veículo.
