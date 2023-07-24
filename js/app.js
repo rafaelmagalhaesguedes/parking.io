@@ -3,8 +3,6 @@
 
   Autor: Rafael Guedes -> cyberrminfo@gmail.com
 
-  -----> JavaScript + LocalStorage
-
 */
 
 // Função para adicionar um veículo
@@ -69,84 +67,12 @@ const salvarVeiculos = (veiculos) => {
   localStorage.setItem("veiculos", JSON.stringify(veiculos));
 };
 
-// Função para exibir a lista de veículos na página
-function exibirVeiculos() {
-  const listaVeiculos = document.getElementById("listaVeiculos");
-  listaVeiculos.innerHTML = "";
-
-  const veiculosEstacionados = obterVeiculos();
-  veiculosEstacionados.forEach((veiculo) => {
-    const tr = document.createElement("tr");
-
-    const tdPlaca = document.createElement("td");
-    tdPlaca.textContent = veiculo.placa;
-    tr.appendChild(tdPlaca);
-
-    const tdDataEntrada = document.createElement("td");
-    const dataEntradaFormatada = formatarData(veiculo.entrada);
-    tdDataEntrada.textContent = dataEntradaFormatada.data;
-    tr.appendChild(tdDataEntrada);
-
-    const tdHoraEntrada = document.createElement("td");
-    const horaEntradaFormatada = formatarHora(veiculo.entrada);
-    tdHoraEntrada.textContent = horaEntradaFormatada;
-    tr.appendChild(tdHoraEntrada);
-
-    const tdBotaoRemover = document.createElement("td");
-    const botaoRemover = document.createElement("button");
-    botaoRemover.classList.add("btn", "btn-danger", "btn-sm");
-    botaoRemover.textContent = "Encerrar";
-    botaoRemover.addEventListener("click", () => {
-      removerVeiculo(veiculo.placa);
-    });
-    tdBotaoRemover.appendChild(botaoRemover);
-    tr.appendChild(tdBotaoRemover);
-
-    listaVeiculos.appendChild(tr);
-  });
-}
-
-// Função para buscar veículos por placa e exibir na tabela
-const buscarVeiculos = () => {
-  const buscaPlacaInput = document.getElementById("placa");
-  const termoBusca = buscaPlacaInput.value.trim().toLowerCase();
-
-  if (termoBusca === "") {
-    exibirVeiculos();
-  } else {
-    const veiculosFiltrados = obterVeiculos().filter((veiculo) => veiculo.placa.toLowerCase().includes(termoBusca));
-    const listaVeiculos = document.getElementById("listaVeiculos");
-    listaVeiculos.innerHTML = "";
-
-    veiculosFiltrados.forEach((veiculo) => {
-      const itemLista = document.createElement("tr");
-
-      const colunaPlaca = document.createElement("td");
-      colunaPlaca.textContent = veiculo.placa;
-
-      const colunaDataEntrada = document.createElement("td");
-      colunaDataEntrada.textContent = formatarData(veiculo.entrada);
-
-      const colunaHoraEntrada = document.createElement("td");
-      colunaHoraEntrada.textContent = formatarHora(veiculo.entrada);
-
-      const tdBotaoRemover = document.createElement("td");
-      const botaoRemover = document.createElement("button");
-      botaoRemover.classList.add("btn", "btn-danger", "btn-sm");
-      botaoRemover.textContent = "Encerrar";
-      botaoRemover.addEventListener("click", () => {
-        removerVeiculo(veiculo.placa);
-      });
-      tdBotaoRemover.appendChild(botaoRemover);
-
-      itemLista.appendChild(colunaPlaca);
-      itemLista.appendChild(colunaDataEntrada);
-      itemLista.appendChild(colunaHoraEntrada);
-      itemLista.appendChild(tdBotaoRemover);
-
-      listaVeiculos.appendChild(itemLista);
-    });
-  }
+// Função para criar um elemento HTML com classe e texto
+const createElementWithClassAndText = (tag, className, text) => {
+  const element = document.createElement(tag);
+  element.classList.add(className);
+  element.textContent = text;
+  return element;
 };
 
 // Função para formatar a data da entrada do veículo
@@ -164,6 +90,64 @@ const formatarHora = (dataHora) => {
   const hora = data.getHours().toString().padStart(2, "0");
   const minutos = data.getMinutes().toString().padStart(2, "0");
   return `${hora}:${minutos}`;
+};
+
+// Função para criar a célula da tabela com texto
+const createTableCell = (text) => {
+  const td = document.createElement("td");
+  td.textContent = text;
+  return td;
+};
+
+// Função para criar o botão Encerrar
+const createEncerrarButton = (placa) => {
+  const botaoRemover = createElementWithClassAndText("button", "btn btn-danger btn-sm", "Encerrar");
+  botaoRemover.addEventListener("click", () => {
+    removerVeiculo(placa);
+  });
+  return botaoRemover;
+};
+
+// Função para criar a linha da tabela com os dados do veículo
+const createTableRow = (veiculo) => {
+  const tr = document.createElement("tr");
+  tr.appendChild(createTableCell(veiculo.placa));
+  tr.appendChild(createTableCell(formatarData(veiculo.entrada).data));
+  tr.appendChild(createTableCell(formatarHora(veiculo.entrada)));
+  tr.appendChild(createTableCell(`R$ ${calcularValorAPagar(veiculo.entrada).toFixed(2)}`));
+  tr.appendChild(createEncerrarButton(veiculo.placa));
+  return tr;
+};
+
+// Função para exibir a lista de veículos na página
+function exibirVeiculos() {
+  const listaVeiculos = document.getElementById("listaVeiculos");
+  listaVeiculos.innerHTML = "";
+
+  const veiculosEstacionados = obterVeiculos();
+  veiculosEstacionados.forEach((veiculo) => {
+    const tr = createTableRow(veiculo);
+    listaVeiculos.appendChild(tr);
+  });
+}
+
+// Função para buscar veículos por placa e exibir na tabela
+const buscarVeiculos = () => {
+  const buscaPlacaInput = document.getElementById("placa");
+  const termoBusca = buscaPlacaInput.value.trim().toLowerCase();
+
+  if (termoBusca === "") {
+    exibirVeiculos();
+  } else {
+    const veiculosFiltrados = obterVeiculos().filter((veiculo) => veiculo.placa.toLowerCase().includes(termoBusca));
+    const listaVeiculos = document.getElementById("listaVeiculos");
+    listaVeiculos.innerHTML = "";
+
+    veiculosFiltrados.forEach((veiculo) => {
+      const tr = createTableRow(veiculo);
+      listaVeiculos.appendChild(tr);
+    });
+  }
 };
 
 // Função para limpar o campo input
