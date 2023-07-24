@@ -106,6 +106,49 @@ function exibirVeiculos() {
   });
 }
 
+// Função para buscar veículos por placa e exibir na tabela
+const buscarVeiculos = () => {
+  const buscaPlacaInput = document.getElementById("placa");
+  const termoBusca = buscaPlacaInput.value.trim().toLowerCase();
+
+  if (termoBusca === "") {
+    exibirVeiculos();
+  } else {
+    const veiculosFiltrados = obterVeiculos().filter((veiculo) => veiculo.placa.toLowerCase().includes(termoBusca));
+    const listaVeiculos = document.getElementById("listaVeiculos");
+    listaVeiculos.innerHTML = "";
+
+    veiculosFiltrados.forEach((veiculo) => {
+      const itemLista = document.createElement("tr");
+
+      const colunaPlaca = document.createElement("td");
+      colunaPlaca.textContent = veiculo.placa;
+
+      const colunaDataEntrada = document.createElement("td");
+      colunaDataEntrada.textContent = formatarData(veiculo.entrada);
+
+      const colunaHoraEntrada = document.createElement("td");
+      colunaHoraEntrada.textContent = formatarHora(veiculo.entrada);
+
+      const tdBotaoRemover = document.createElement("td");
+      const botaoRemover = document.createElement("button");
+      botaoRemover.classList.add("btn", "btn-danger", "btn-sm");
+      botaoRemover.textContent = "Encerrar";
+      botaoRemover.addEventListener("click", () => {
+        removerVeiculo(veiculo.placa);
+      });
+      tdBotaoRemover.appendChild(botaoRemover);
+
+      itemLista.appendChild(colunaPlaca);
+      itemLista.appendChild(colunaDataEntrada);
+      itemLista.appendChild(colunaHoraEntrada);
+      itemLista.appendChild(tdBotaoRemover);
+
+      listaVeiculos.appendChild(itemLista);
+    });
+  }
+};
+
 // Função para formatar a data da entrada do veículo
 const formatarData = (dataHora) => {
   const data = new Date(dataHora);
@@ -132,51 +175,21 @@ const limparCampos = () => {
 // Event listeners para os botões e carregamento inicial da página
 //
 
-// Adicionar
+// Adicionar evento de busca ao botão "Adicionar"
 document.getElementById("adicionarBtn").addEventListener("click", () => {
   const placa = document.getElementById("placa").value;
   adicionarVeiculo(placa);
 });
 
-// Buscar
-document.getElementById("buscarBtn").addEventListener("click", () => {
-  const buscaPlacaInput = document.getElementById("placa");
-  const termoBusca = buscaPlacaInput.value.trim().toLowerCase();
+// Adicionar evento de busca ao botão "Buscar"
+document.getElementById("buscarBtn").addEventListener("click", buscarVeiculos);
 
-  if (termoBusca === "") {
-    exibirVeiculos();
-  } else {
-    const veiculosFiltrados = obterVeiculos().filter((veiculo) => veiculo.placa.toLowerCase().includes(termoBusca));
-    const listaVeiculos = document.getElementById("listaVeiculos");
-    listaVeiculos.innerHTML = "";
-
-    veiculosFiltrados.forEach((veiculo) => {
-      const itemLista = document.createElement("tr");
-
-      const colunaPlaca = document.createElement("td");
-      colunaPlaca.textContent = veiculo.placa;
-
-      const colunaDataEntrada = document.createElement("td");
-      colunaDataEntrada.textContent = formatarData(veiculo.entrada);
-
-      const colunaHoraEntrada = document.createElement("td");
-      colunaHoraEntrada.textContent = formatarHora(veiculo.entrada);
-
-      itemLista.appendChild(colunaPlaca);
-      itemLista.appendChild(colunaDataEntrada);
-      itemLista.appendChild(colunaHoraEntrada);
-
-      listaVeiculos.appendChild(itemLista);
-    });
-  }
-});
-
-// limpar
+// Adicionar evento de busca ao botão "Limpar"
 document.getElementById("limparBtn").addEventListener("click", () => {
   limparCampos();
 });
 
-// Atualizar
+// Adicionar evento de busca ao botão "Atualizar"
 document.getElementById("atualizarBtn").addEventListener("click", () => {
   exibirVeiculos();
 });
