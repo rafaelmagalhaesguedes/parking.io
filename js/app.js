@@ -156,25 +156,19 @@ const createTableRow = (veiculo) => {
   tr.appendChild(createTableCell(veiculo.placa));
   tr.appendChild(createTableCell(formatarData(veiculo.entrada).data));
   tr.appendChild(createTableCell(formatarHora(veiculo.entrada)));
-
   // Criar célula para exibir o tempo de permanência
   const tdPermanencia = createTableCell("");
   tr.appendChild(tdPermanencia);
-
   // Criar célula para exibir o valor a pagar
   const tdValorAPagar = createTableCell("");
   tr.appendChild(tdValorAPagar);
-
   tr.appendChild(createEncerrarButton(veiculo.placa));
-
   // Atualizar a tabela a cada segundo
   setInterval(() => {
     const permanencia = calcularPermanencia(new Date(veiculo.entrada), new Date());
     const valorAPagar = calcularValorAPagar(permanencia);
-
     // Atualizar a célula da tabela com o tempo de permanência
     tdPermanencia.textContent = `${permanencia.horas} horas, ${permanencia.minutos} minutos, ${permanencia.segundos} segundos`;
-
     // Atualizar a célula da tabela com o valor a pagar
     tdValorAPagar.textContent = `R$ ${valorAPagar.toFixed(2)}`;
   }, 1000); // 1000 milissegundos = 1 segundo
