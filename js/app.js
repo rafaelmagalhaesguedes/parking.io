@@ -36,21 +36,34 @@ const removerVeiculo = (placa) => {
   const indice = veiculosEstacionados.findIndex((veiculo) => veiculo.placa === placa);
   if (indice !== -1) {
     const veiculo = veiculosEstacionados[indice];
-
     // Calcula a permanência do veículo
     const permanencia = calcularPermanencia(new Date(veiculo.entrada), new Date());
-
     // Calcula o valor a pagar com base na permanência
     const valorAPagar = calcularValorAPagar(permanencia);
 
-    alert(`Tempo de permanência: ${permanencia.horas} horas, ${permanencia.minutos} minutos, ${permanencia.segundos} segundos\nValor a pagar: R$${valorAPagar.toFixed(2)}`);
+    // Preenche o modal com os detalhes da permanência e valor a pagar
+    const modalDetalhes = document.getElementById("detalhesPermanencia");
+    modalDetalhes.textContent = `${permanencia.horas} horas, ${permanencia.minutos} minutos, ${permanencia.segundos} segundos`;
+    const modalValorAPagar = document.getElementById("valorAPagar");
+    modalValorAPagar.textContent = valorAPagar.toFixed(2);
 
-    veiculosEstacionados.splice(indice, 1);
-    salvarVeiculos(veiculosEstacionados);
+    // Adicionar evento de encerrar ao botão "Encerrar" dentro do modal
+    const encerrarBtn = document.getElementById("encerrarBtn");
+    encerrarBtn.addEventListener("click", () => {
+      // Remove o veículo do estacionamento e atualiza a tabela
+      veiculosEstacionados.splice(indice, 1);
+      salvarVeiculos(veiculosEstacionados);
+      exibirVeiculos();
 
-    exibirVeiculos();
+      // Fechar o modal após encerrar o veículo
+      $("#modalPagamento").modal("hide");
+    });
+
+    // Exibe o modal
+    $("#modalPagamento").modal("show");
   }
 };
+
 
 // Função para calcular a permanência de um veículo
 const calcularPermanencia = (entrada, saida) => {
