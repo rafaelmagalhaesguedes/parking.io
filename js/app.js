@@ -36,34 +36,38 @@ const removerVeiculo = (placa) => {
   const indice = veiculosEstacionados.findIndex((veiculo) => veiculo.placa === placa);
   if (indice !== -1) {
     const veiculo = veiculosEstacionados[indice];
-    // Calcula a permanência do veículo
     const permanencia = calcularPermanencia(new Date(veiculo.entrada), new Date());
-    // Calcula o valor a pagar com base na permanência
     const valorAPagar = calcularValorAPagar(permanencia);
 
-    // Preenche o modal com os detalhes da permanência e valor a pagar
-    const modalDetalhes = document.getElementById("detalhesPermanencia");
-    modalDetalhes.textContent = `${permanencia.horas} horas, ${permanencia.minutos} minutos, ${permanencia.segundos} segundos`;
-    const modalValorAPagar = document.getElementById("valorAPagar");
-    modalValorAPagar.textContent = valorAPagar.toFixed(2);
-
-    // Adicionar evento de encerrar ao botão "Encerrar" dentro do modal
-    const encerrarBtn = document.getElementById("encerrarBtn");
-    encerrarBtn.addEventListener("click", () => {
-      // Remove o veículo do estacionamento e atualiza a tabela
-      veiculosEstacionados.splice(indice, 1);
-      salvarVeiculos(veiculosEstacionados);
+    preencherModalDetalhes(permanencia, valorAPagar, () => {
+      removerVeiculoDoEstacionamento(veiculosEstacionados, indice);
       exibirVeiculos();
-
-      // Fechar o modal após encerrar o veículo
-      $("#modalPagamento").modal("hide");
     });
-
-    // Exibe o modal
-    $("#modalPagamento").modal("show");
   }
 };
 
+// Função para preencher o modal com os detalhes da permanência e valor a pagar
+const preencherModalDetalhes = (permanencia, valorAPagar, encerrarVeiculoCallback) => {
+  const modalDetalhes = document.getElementById("detalhesPermanencia");
+  modalDetalhes.textContent = `${permanencia.horas} horas, ${permanencia.minutos} 
+    minutos, ${permanencia.segundos} segundos`;
+  const modalValorAPagar = document.getElementById("valorAPagar");
+  modalValorAPagar.textContent = valorAPagar.toFixed(2);
+
+  const encerrarBtn = document.getElementById("encerrarBtn");
+  encerrarBtn.addEventListener("click", () => {
+    encerrarVeiculoCallback();
+    $("#modalPagamento").modal("hide");
+  });
+
+  $("#modalPagamento").modal("show");
+};
+
+// Função para remover o veículo do estacionamento e salvar as alterações
+const removerVeiculoDoEstacionamento = (veiculosEstacionados, indice) => {
+  veiculosEstacionados.splice(indice, 1);
+  salvarVeiculos(veiculosEstacionados);
+};
 
 // Função para calcular a permanência de um veículo
 const calcularPermanencia = (entrada, saida) => {
@@ -126,17 +130,18 @@ const createTableCell = (text) => {
 const createEncerrarButton = (placa) => {
   const tdBotaoRemover = document.createElement("td"); // Criar célula da tabela para o botão
   const botaoRemover = document.createElement("button");
-  botaoRemover.classList.add("btn", "btn-danger", "btn-sm");
-  botaoRemover.textContent = "Encerrar";
+  botaoRemover.classList.add("btn", "btn-danger", "btn-sm", "btn-block");
+  botaoRemover.textContent = "Dar saída";
   botaoRemover.addEventListener("click", () => {
     removerVeiculo(placa);
   });
   tdBotaoRemover.appendChild(botaoRemover); // Adicionar o botão à célula
   return tdBotaoRemover;
 };
+
 // Função para criar a linha da tabela com os dados do veículo
 const createTableRow = (veiculo) => {
-  const tr = document.createElement("tr");
+  const tr = document.createElement("tr"); 
   tr.appendChild(createTableCell(veiculo.placa));
   tr.appendChild(createTableCell(formatarData(veiculo.entrada).data));
   tr.appendChild(createTableCell(formatarHora(veiculo.entrada)));

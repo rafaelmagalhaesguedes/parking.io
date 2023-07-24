@@ -26,25 +26,26 @@
     <h1 class="text-center mb-4">Estacionamento JS</h1>
     <div class="row justify-content-center">
       <div class="col-md-6">
-        <div class="input-group d-flex">
+        <div class="input-group mb-3">
           <input type="text" id="placa" class="form-control" placeholder="Digite a placa">
-          <div class="input-group-append">
-            <button id="adicionarBtn" class="btn btn-primary">Adicionar</button>
-            <button id="buscarBtn" class="btn btn-info">Buscar</button>
-            <button id="limparBtn" class="btn btn-secondary">Limpar</button>
-            <button id="atualizarBtn" class="btn btn-secondary">Atualizar</button>
-          </div>
+        </div>
+        <div class="btn-group d-flex" role="group">
+          <button id="adicionarBtn" class="btn btn-primary mr-2">Adicionar</button>
+          <button id="buscarBtn" class="btn btn-info mr-2">Buscar</button>
+          <button id="limparBtn" class="btn btn-info mr-2">Limpar</button>
+          <button id="atualizarBtn" class="btn btn-dark mr-2">Atualizar</button>
         </div>
       </div>
     </div>
     <div class="row mt-3">
       <div class="col-md-12 table-responsive">
-        <table class="table">
+        <table class="table table-dark">
           <thead class="thead-dark">
             <tr>
               <th scope="col">Placa</th>
               <th scope="col">Data de Entrada</th>
               <th scope="col">Hora de Entrada</th>
+              <th scope="col">Encerrar</th>
               <th scope="col"></th>
             </tr>
           </thead>
