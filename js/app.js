@@ -8,6 +8,9 @@
 // Função para adicionar um veículo
 const adicionarVeiculo = (placa) => {
   if (placa !== "") {
+    // Formata a placa para o padrão "RUU-3G45" independentemente do que o usuário digitar
+    placa = placa.toUpperCase().replace(/-/g, "");
+
     // Cria um objeto "veiculo" com os dados da placa e a hora de entrada
     const veiculo = {
       placa: placa,
@@ -48,7 +51,6 @@ const removerVeiculo = (placa) => {
     exibirVeiculos();
   }
 };
-
 
 // Função para calcular a permanência de um veículo
 const calcularPermanencia = (entrada, saida) => {
@@ -131,7 +133,7 @@ const createTableRow = (veiculo) => {
 };
 
 // Função para exibir a lista de veículos na página
-function exibirVeiculos() {
+const exibirVeiculos = () => {
   const listaVeiculos = document.getElementById("listaVeiculos");
   listaVeiculos.innerHTML = "";
 
@@ -140,7 +142,7 @@ function exibirVeiculos() {
     const tr = createTableRow(veiculo);
     listaVeiculos.appendChild(tr);
   });
-}
+};
 
 // Função para buscar veículos por placa e exibir na tabela
 const buscarVeiculos = () => {
