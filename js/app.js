@@ -190,21 +190,21 @@ const limparCampos = () => {
 // Event listeners para os botões e carregamento inicial da página
 //
 
-// Adicionar evento de busca ao botão "Adicionar"
+// Evento de busca ao botão "Adicionar"
 document.getElementById("adicionarBtn").addEventListener("click", () => {
   const placa = document.getElementById("placa").value;
   adicionarVeiculo(placa);
 });
 
-// Adicionar evento de busca ao botão "Buscar"
+// Evento de busca ao botão "Buscar"
 document.getElementById("buscarBtn").addEventListener("click", buscarVeiculos);
 
-// Adicionar evento de busca ao botão "Limpar"
+// Evento de busca ao botão "Limpar"
 document.getElementById("limparBtn").addEventListener("click", () => {
   limparCampos();
 });
 
-// Adicionar evento de busca ao botão "Atualizar"
+// Evento de busca ao botão "Atualizar"
 document.getElementById("atualizarBtn").addEventListener("click", () => {
   exibirVeiculos();
 });
