@@ -95,7 +95,7 @@ function exibirVeiculos() {
     const tdBotaoRemover = document.createElement("td");
     const botaoRemover = document.createElement("button");
     botaoRemover.classList.add("btn", "btn-danger", "btn-sm");
-    botaoRemover.textContent = "Remover";
+    botaoRemover.textContent = "Encerrar";
     botaoRemover.addEventListener("click", () => {
       removerVeiculo(veiculo.placa);
     });
@@ -107,21 +107,21 @@ function exibirVeiculos() {
 }
 
 // Função para formatar a data da entrada do veículo
-function formatarData(dataHora) {
+const formatarData = (dataHora) => {
   const data = new Date(dataHora);
   const dia = data.getDate().toString().padStart(2, "0");
   const mes = (data.getMonth() + 1).toString().padStart(2, "0");
   const ano = data.getFullYear();
   return { data: `${dia}/${mes}/${ano}` };
-}
+};
 
 // Função para formatar a hora da entrada do veículo
-function formatarHora(dataHora) {
+const formatarHora = (dataHora) => {
   const data = new Date(dataHora);
   const hora = data.getHours().toString().padStart(2, "0");
   const minutos = data.getMinutes().toString().padStart(2, "0");
   return `${hora}:${minutos}`;
-}
+};
 
 // Função para limpar o campo input
 const limparCampos = () => {
@@ -149,19 +149,23 @@ document.getElementById("buscarBtn").addEventListener("click", () => {
     const veiculosFiltrados = obterVeiculos().filter((veiculo) => veiculo.placa.toLowerCase().includes(termoBusca));
     const listaVeiculos = document.getElementById("listaVeiculos");
     listaVeiculos.innerHTML = "";
+
     veiculosFiltrados.forEach((veiculo) => {
-      const itemLista = document.createElement("li");
-      itemLista.classList.add("list-group-item");
-      itemLista.textContent = veiculo.placa;
+      const itemLista = document.createElement("tr");
 
-      const botaoRemover = document.createElement("button");
-      botaoRemover.classList.add("btn", "btn-danger", "btn-sm", "ml-2");
-      botaoRemover.textContent = "Remover";
-      botaoRemover.addEventListener("click", () => {
-        removerVeiculo(veiculo.placa);
-      });
+      const colunaPlaca = document.createElement("td");
+      colunaPlaca.textContent = veiculo.placa;
 
-      itemLista.appendChild(botaoRemover);
+      const colunaDataEntrada = document.createElement("td");
+      colunaDataEntrada.textContent = formatarData(veiculo.entrada);
+
+      const colunaHoraEntrada = document.createElement("td");
+      colunaHoraEntrada.textContent = formatarHora(veiculo.entrada);
+
+      itemLista.appendChild(colunaPlaca);
+      itemLista.appendChild(colunaDataEntrada);
+      itemLista.appendChild(colunaHoraEntrada);
+
       listaVeiculos.appendChild(itemLista);
     });
   }
@@ -170,6 +174,11 @@ document.getElementById("buscarBtn").addEventListener("click", () => {
 // limpar
 document.getElementById("limparBtn").addEventListener("click", () => {
   limparCampos();
+});
+
+// Atualizar
+document.getElementById("atualizarBtn").addEventListener("click", () => {
+  exibirVeiculos();
 });
 
 // Carregar os dados iniciais ao carregar a página
