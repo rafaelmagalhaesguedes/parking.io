@@ -33,16 +33,22 @@ const removerVeiculo = (placa) => {
   const indice = veiculosEstacionados.findIndex((veiculo) => veiculo.placa === placa);
   if (indice !== -1) {
     const veiculo = veiculosEstacionados[indice];
+
+    // Calcula a permanência do veículo
+    const permanencia = calcularPermanencia(new Date(veiculo.entrada), new Date());
+
+    // Calcula o valor a pagar com base na permanência
+    const valorAPagar = calcularValorAPagar(permanencia);
+
+    alert(`Tempo de permanência: ${permanencia.horas} horas, ${permanencia.minutos} minutos, ${permanencia.segundos} segundos\nValor a pagar: R$${valorAPagar.toFixed(2)}`);
+
     veiculosEstacionados.splice(indice, 1);
     salvarVeiculos(veiculosEstacionados);
 
-    // Calcula a permanência do veículo e o valor a pagar
-    const permanencia = calcularPermanencia(new Date(veiculo.entrada), new Date());
-    const valorAPagar = calcularValorAPagar(permanencia);
-    alert(`Tempo de permanência: ${permanencia.horas} horas, ${permanencia.minutos} minutos, ${permanencia.segundos} segundos\nValor a pagar: R$${valorAPagar.toFixed(2)}`);
     exibirVeiculos();
   }
 };
+
 
 // Função para calcular a permanência de um veículo
 const calcularPermanencia = (entrada, saida) => {
@@ -67,10 +73,12 @@ const salvarVeiculos = (veiculos) => {
   localStorage.setItem("veiculos", JSON.stringify(veiculos));
 };
 
-// Função para criar um elemento HTML com classe e texto
-const createElementWithClassAndText = (tag, className, text) => {
+// Função para criar um elemento HTML com classes e texto
+const createElementWithClassAndText = (tag, classNames, text) => {
   const element = document.createElement(tag);
-  element.classList.add(className);
+  classNames.forEach((className) => {
+    element.classList.add(className);
+  });
   element.textContent = text;
   return element;
 };
@@ -101,20 +109,23 @@ const createTableCell = (text) => {
 
 // Função para criar o botão Encerrar
 const createEncerrarButton = (placa) => {
-  const botaoRemover = createElementWithClassAndText("button", "btn btn-danger btn-sm", "Encerrar");
+  const tdBotaoRemover = document.createElement("td"); // Criar célula da tabela para o botão
+  const botaoRemover = document.createElement("button");
+  botaoRemover.classList.add("btn", "btn-danger", "btn-sm");
+  botaoRemover.textContent = "Encerrar";
   botaoRemover.addEventListener("click", () => {
     removerVeiculo(placa);
   });
-  return botaoRemover;
+  tdBotaoRemover.appendChild(botaoRemover); // Adicionar o botão à célula
+  return tdBotaoRemover;
 };
-
 // Função para criar a linha da tabela com os dados do veículo
 const createTableRow = (veiculo) => {
   const tr = document.createElement("tr");
   tr.appendChild(createTableCell(veiculo.placa));
   tr.appendChild(createTableCell(formatarData(veiculo.entrada).data));
   tr.appendChild(createTableCell(formatarHora(veiculo.entrada)));
-  tr.appendChild(createTableCell(`R$ ${calcularValorAPagar(veiculo.entrada).toFixed(2)}`));
+  // tr.appendChild(createTableCell(`R$ ${calcularValorAPagar(veiculo.entrada).toFixed(2)}`));
   tr.appendChild(createEncerrarButton(veiculo.placa));
   return tr;
 };
