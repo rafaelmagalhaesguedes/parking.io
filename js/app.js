@@ -50,7 +50,7 @@ const removerVeiculo = (placa) => {
 const preencherModalDetalhes = (permanencia, valorAPagar, encerrarVeiculoCallback) => {
   const modalDetalhes = document.getElementById("detalhesPermanencia");
   modalDetalhes.textContent = `${permanencia.horas} horas, ${permanencia.minutos} 
-    minutos, ${permanencia.segundos} segundos`;
+      minutos, ${permanencia.segundos} segundos`;
   const modalValorAPagar = document.getElementById("valorAPagar");
   modalValorAPagar.textContent = valorAPagar.toFixed(2);
 
@@ -80,10 +80,21 @@ const calcularPermanencia = (entrada, saida) => {
 
 // Função para calcular o valor a pagar pela permanência do veículo
 const calcularValorAPagar = (permanencia) => {
+  // Verificar se permanencia é um objeto válido com as propriedades necessárias
+  if (!permanencia || typeof permanencia !== "object" || isNaN(permanencia.horas) || isNaN(permanencia.minutos) || isNaN(permanencia.segundos)) {
+    return 0; // Retornar 0 ou outro valor padrão caso a permanencia não seja válida
+  }
+
   // Lógica para cálculo do valor a pagar, você pode personalizá-la conforme suas regras de cobrança
   const valorPorHora = 10;
   const totalHoras = permanencia.horas + permanencia.minutos / 60 + permanencia.segundos / 3600;
   const valorAPagar = valorPorHora * totalHoras;
+
+  // Verificar se valorAPagar é um número válido
+  if (isNaN(valorAPagar)) {
+    return 0; // Retornar 0 ou outro valor padrão caso o cálculo resulte em NaN
+  }
+
   return valorAPagar;
 };
 
@@ -145,8 +156,29 @@ const createTableRow = (veiculo) => {
   tr.appendChild(createTableCell(veiculo.placa));
   tr.appendChild(createTableCell(formatarData(veiculo.entrada).data));
   tr.appendChild(createTableCell(formatarHora(veiculo.entrada)));
-  // tr.appendChild(createTableCell(`R$ ${calcularValorAPagar(veiculo.entrada).toFixed(2)}`));
+
+  // Criar célula para exibir o tempo de permanência
+  const tdPermanencia = createTableCell("");
+  tr.appendChild(tdPermanencia);
+
+  // Criar célula para exibir o valor a pagar
+  const tdValorAPagar = createTableCell("");
+  tr.appendChild(tdValorAPagar);
+
   tr.appendChild(createEncerrarButton(veiculo.placa));
+
+  // Atualizar a tabela a cada segundo
+  setInterval(() => {
+    const permanencia = calcularPermanencia(new Date(veiculo.entrada), new Date());
+    const valorAPagar = calcularValorAPagar(permanencia);
+
+    // Atualizar a célula da tabela com o tempo de permanência
+    tdPermanencia.textContent = `${permanencia.horas} horas, ${permanencia.minutos} minutos, ${permanencia.segundos} segundos`;
+
+    // Atualizar a célula da tabela com o valor a pagar
+    tdValorAPagar.textContent = `R$ ${valorAPagar.toFixed(2)}`;
+  }, 1000); // 1000 milissegundos = 1 segundo
+
   return tr;
 };
 
