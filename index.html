@@ -1,30 +1,63 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Estacionamento</title>
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <title>Estacionamento JS</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-
-  <div class="container">
-    <h1 class="mt-4">Estacionamento</h1>
-  
-    <div class="form-group">
-      <label for="placa">Placa do Veículo:</label>
-      <input type="text" class="form-control" id="placa" />
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark navbar-custom">
+    <a class="navbar-brand" href="#">Estacionamento JS</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="#">Login</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Logoff</a>
+        </li>
+      </ul>
     </div>
-  
-    <button onclick="adicionarVeiculo()" class="btn btn-primary">Adicionar</button>
-    <button onclick="buscarPlaca()" class="btn btn-primary">Buscar</button>
-    <button onclick="exibirVeiculos()" class="btn btn-primary">Exibir Veículos</button>
+  </nav>
 
-    <h2 class="mt-4">Veículos Estacionados</h2>
-    <ul id="listaVeiculos" class="list-group"></ul>
+  <div class="container mt-4">
+    <h1 class="text-center mb-4">Estacionamento JS</h1>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="input-group">
+          <input type="text" id="placa" class="form-control" placeholder="Digite a placa">
+          <div class="input-group-append">
+            <button id="adicionarBtn" class="btn btn-primary">Adicionar</button>
+            <button id="buscarBtn" class="btn btn-info">Buscar</button>
+            <button id="limparBtn" class="btn btn-secondary">Limpar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mt-3">
+      <div class="col-md-12">
+        <table class="table">
+          <thead class="thead-dark">
+            <tr>
+              <th scope="col">Placa</th>
+              <th scope="col">Data de Entrada</th>
+              <th scope="col">Hora de Entrada</th>
+              <th scope="col">Ação</th>
+            </tr>
+          </thead>
+          <tbody id="listaVeiculos">
+            <!-- Aqui os dados dos veículos serão adicionados dinamicamente pelo JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
-  
-  <script src="js/app.js"></script>
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="./js/app.js"></script>
 </body>
 </html>
