@@ -13,23 +13,60 @@ class Estacionamento {
   }
 
   adicionarVeiculo(placa) {
-    if (!placa || placa.trim() === "") {
-      alert("Digite uma placa válida antes de adicionar o veículo!");
-      return;
-    }
-    // Formata a placa para o padrão "RUU-3G45" independentemente do que o usuário digitar
-    placa = placa.toUpperCase().replace(/-/g, "");
+    try {
+      if (!placa || placa.trim() === "") {
+        throw new Error("Digite uma placa válida antes de adicionar o veículo!");
+      }
+      
+      // Formata a placa para o padrão "RUU-3G45" independentemente do que o usuário digitar
+      placa = this.formatarPlaca(placa);
 
-    // Cria um objeto "veiculo" com os dados da placa e a hora de entrada
-    const veiculo = {
+      // Insere o traço '-' no meio da placa, se ainda não estiver presente
+      if (placa.length === 7) {
+        placa = `${placa.substring(0, 3)}-${placa.substring(3)}`;
+      } else { 
+        throw new Error("Digite uma placa válida!"); 
+      }
+      
+      const veiculosEstacionados = this.obterVeiculos();
+      this.verificarPlacaExistente(veiculosEstacionados, placa);
+
+      const veiculo = this.criarObjetoVeiculo(placa);
+      this.adicionarVeiculoAoEstacionamento(veiculosEstacionados, veiculo);
+      this.salvarVeiculos(veiculosEstacionados);
+      this.exibirVeiculos();
+      this.limparCampos();
+    } catch (error) {
+      alert(error.message);
+    }
+  }
+
+  verificarFormatoPlaca(placa) {
+    // Verifica se a placa tem o formato AAA-1234
+    const formatoPlaca = /^[A-Z]{3}-\d{4}$/;
+    return formatoPlaca.test(placa);
+  }
+
+  formatarPlaca(placa) {
+    return placa.trim().toUpperCase().replace(/[^A-Z0-9]/g, "");
+  }
+
+  verificarPlacaExistente(veiculosEstacionados, placa) {
+    const placaExistente = veiculosEstacionados.find((veiculo) => veiculo.placa === placa);
+    if (placaExistente) {
+      throw new Error("Esta placa já está cadastrada no estacionamento!");
+    }
+  }
+
+  criarObjetoVeiculo(placa) {
+    return {
       placa: placa,
       entrada: new Date()
     };
-    const veiculosEstacionados = this.obterVeiculos();
+  }
+
+  adicionarVeiculoAoEstacionamento(veiculosEstacionados, veiculo) {
     veiculosEstacionados.push(veiculo);
-    this.salvarVeiculos(veiculosEstacionados);
-    this.exibirVeiculos();
-    this.limparCampos();
   }
 
   obterVeiculos() {
@@ -42,20 +79,20 @@ class Estacionamento {
     const indice = veiculosEstacionados.findIndex((veiculo) => veiculo.placa === placa);
     if (indice !== -1) {
       const veiculo = veiculosEstacionados[indice];
-      const _placa = placa;
+      const p = placa;
       const permanencia = this.calcularPermanencia(new Date(veiculo.entrada), new Date());
       const valorAPagar = this.calcularValorAPagar(permanencia);
 
-      this.preencherModalDetalhes(_placa, permanencia, valorAPagar, () => {
+      this.preencherModalDetalhes(p, permanencia, valorAPagar, () => {
         this.removerVeiculoDoEstacionamento(veiculosEstacionados, indice);
         this.exibirVeiculos();
       });
     }
   }
 
-  preencherModalDetalhes(_placa, permanencia, valorAPagar, encerrarVeiculoCallback) {
-    const modalPlaca = document.getElementById("placa");
-    modalPlaca.textContent = `${_placa}`;
+  preencherModalDetalhes(p, permanencia, valorAPagar, encerrarVeiculoCallback) {
+    const modalPlaca = document.getElementById("detalhesPlaca");
+    modalPlaca.textContent = `${p}`;
 
     const modalDetalhes = document.getElementById("detalhesPermanencia");
     modalDetalhes.textContent = `${permanencia.horas} horas, ${permanencia.minutos} minutos, ${permanencia.segundos} segundos`;
@@ -123,12 +160,6 @@ class Estacionamento {
     return `${hora}:${minutos}`;
   }
 
-  createTableCell(text) {
-    const td = document.createElement("td");
-    td.textContent = text;
-    return td;
-  }
-
   createEncerrarButton(placa) {
     const tdBotaoRemover = document.createElement("td"); // Criar célula da tabela para o botão
     const botaoRemover = document.createElement("button");
@@ -139,6 +170,12 @@ class Estacionamento {
     });
     tdBotaoRemover.appendChild(botaoRemover); // Adicionar o botão à célula
     return tdBotaoRemover;
+  }
+
+  createTableCell(text) {
+    const td = document.createElement("td");
+    td.textContent = text;
+    return td;
   }
 
   // Função para criar a linha da tabela com os dados do veículo
