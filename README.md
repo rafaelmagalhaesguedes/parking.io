@@ -4,7 +4,7 @@ Este é um projeto simples de um sistema de estacionamento desenvolvido em JavaS
 
 # Live link
 
-https://rafaelmagalhaesguedes.github.io/estacionamento.io/
+https://rafaelmagalhaesguedes.github.io/parking.io/
 
 # Funcionalidades
 
